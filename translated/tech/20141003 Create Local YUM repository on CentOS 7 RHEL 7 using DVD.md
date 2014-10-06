@@ -1,26 +1,24 @@
-johnsonshu translating
-
-Create Local YUM repository on CentOS 7 / RHEL 7 using DVD
+使用安装DVD为 CentOS7/RHEL7 创建本地YUM仓库
 ================================================================================
 
-YUM is the package management tool that helps you to install or update the package through the network or local, at the same time it provides easy method to install a package with it’s dependent packages. Configuration files are under /etc directory, /etc/yum.conf is the mail global file that contains the global options such as cache directory,log directory etc… To add new or update the existing repository, you must got to the /etc/repos.d directory and create or open a file that ends on .repo respectively.
+YUM包管理工具，可以帮助您通过网络或本地安装或更新软件包。同时，它提供了简单的方法来安装依赖软件包。它的配置文件在/etc目录下，/etc/yum.conf配置文件中包含全局选项（例如缓存目录，日志目录等)。要添加新的YUM仓库或更新现有的YUM仓库，需要在/etc/repos.d目录下，新建或者打开既存的.repo文件。
 
-### Create Source: ###
+### 创建仓库源: ###
 
-Before creating new repository file, you must know the repository source ( whether the packages stored locally or remotely); Repository sources can be created either using createrepo package or mounting the DVD on the directory, mounting the DVD/CD ROM will lead to save the space on hdd used by being copied to HDD.
+在创建新的YUM仓库配置文件之前，你必须确定YUM仓库的位置（无论是本地或远程的）。YUM仓库可以使用createrepo软件包来创建。或者，你可以直接挂载(mount)安装DVD，这样你就不需要拷贝软件包到硬盘去创建仓库了。
 
-Mount the CD/DVD ROM on the any directory of your wish, for testing mount it on /cdrom.
+挂载(mount) CD/DVD ROM 到你指定的目录，下面的例子是挂载到 /cdrom
 
     # mkdir /cdrom
     # mount /dev/cdrom /cdrom
 
-Configuration file:
+配置文件:
 
-Create the new repo file called cdrom.repo under /etc/repos.d directory.
+在 /etc/repos.d目录下，创建新的 .repo文件。
 
     # vi /etc/yum.repos.d/local.repo
 
-Add the following details.
+内容：
 
     [LocalRepo]
     name=Local Repository
@@ -29,26 +27,26 @@ Add the following details.
     gpgcheck=1
     gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
 
-1. **[LocalRepo]** – Name of the Section.
-2. **name** = Name of the repository
-3. **baseurl** = Location of the package
-4. **Enabled** = Enable repository
-5. **gpgcheck**= Enable secure installation
-6. **gpgkey**= Location of the key
+1. **[LocalRepo]** – 分段名
+2. ***name*** = 仓库名
+3. **baseurl** = 软件包的位置
+4. **Enabled** = 是否有效
+5. **gpgcheck**= 安装前安全检查
+6. **gpgkey**= 安全检查gpgkey
 
-### Note: ###
-1. gpgcheck is optional (If you set gpgcheck=0, there is no need to mention gpgkey)
-2. You may find multiple repository files in /etc/yum.repos.d directory, remove the all the repo files except local.repo. This is to ensure that your system do not look for packages from CentOS or Redhat repositories.
-### Installation: ###
-Before installing clear the repository cache by issuing the following command.
+### 说明: ###
+1. gpgcheck 是可选项 (假如gpgcheck=0， gpgkey就不需要去管了)
+2. /etc/yum.repos.d目录下可能有多个仓库配置文件，除了local.repo，请把其他的文件都删除掉。（译注：也可以移到别的备份目录，需要的时候再拿回来。）这可以保证系统不会从CentOS或Redhat的远程仓库找软件包。
+### 安装: ###
+在安装之前，需要清除软件仓库的缓存。 请执行下面的命令。
 
     # yum clean all
 
-Install the package using the yum command, let’s install the vsftpd package from the local repository.
+然后安装需要的软件包。这里我们从本地仓库安装vsftpd软件包。
 
     # yum install vsftpd
 
-Out put will be like below, it will try to cache the package information. When you give yes to download the package, it will prompt you to accept gpg signing key.
+输出结果如下。 它会尝试缓存软件包的信息。当你选Yes的时候，会提示你去接受pgp签名
 
 
     Loaded plugins: fastestmirror
@@ -98,7 +96,7 @@ Out put will be like below, it will try to cache the package information. When y
      
     Complete!
 
-That’s all you have successfully configured the local repository on the machine, but it is limited to single machine where the CD or DVD is mounted. Follow the guide to setup the repository for the network installation.
+根据上面的步骤，你已经配置好了本地软件仓库。这个方法仅限于使用CD/DVD的单机环境。如果想设置网络仓库源，请参考手册。
 
 
 --------------------------------------------------------------------------------
